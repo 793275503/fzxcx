@@ -1,0 +1,168 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* === 演出服装定制 — 舞台帷幕主题 === */
+    /* 主色：深绛红 - 舞台帷幕感 */
+    --primary: 348 55% 18%;
+    --primary-foreground: 30 20% 95%;
+    --primary-glow: 348 60% 32%;
+
+    /* 辅助色：暖灰调 */
+    --secondary: 30 10% 93%;
+    --secondary-foreground: 348 15% 22%;
+
+    /* 强调色：玫瑰金/聚光灯 */
+    --accent: 16 78% 56%;
+    --accent-foreground: 348 30% 10%;
+
+    /* 背景与前景 */
+    --background: 30 20% 97%;
+    --foreground: 348 15% 10%;
+
+    /* 卡片 */
+    --card: 0 0% 100%;
+    --card-foreground: 348 15% 10%;
+
+    /* 弹出层 */
+    --popover: 0 0% 100%;
+    --popover-foreground: 348 15% 10%;
+
+    /* 静音色 */
+    --muted: 30 8% 91%;
+    --muted-foreground: 348 8% 44%;
+
+    /* 危险色 */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* 边框与输入 */
+    --border: 30 12% 88%;
+    --input: 30 12% 88%;
+    --ring: 348 55% 18%;
+
+    /* 圆角 */
+    --radius: 0.625rem;
+
+    /* === 渐变 === */
+    --gradient-hero: linear-gradient(135deg, hsl(348 55% 8% / 0.93), hsl(348 40% 14% / 0.78));
+    --gradient-gold: linear-gradient(135deg, hsl(16 78% 52%), hsl(348 60% 36%));
+    --gradient-card-hover: linear-gradient(180deg, hsl(0 0% 100%), hsl(348 20% 97%));
+    --gradient-section: linear-gradient(180deg, hsl(30 20% 97%), hsl(348 12% 94%));
+    --gradient-curtain: linear-gradient(180deg, hsl(348 55% 14%), hsl(348 40% 8%));
+    --gradient-spotlight: radial-gradient(ellipse at center top, hsl(16 78% 56% / 0.15), transparent 60%);
+
+    /* === 阴影 === */
+    --shadow-card: 0 2px 16px -2px hsl(348 15% 10% / 0.08), 0 1px 4px -1px hsl(348 15% 10% / 0.04);
+    --shadow-card-hover: 0 8px 32px -4px hsl(348 15% 10% / 0.12), 0 2px 8px -2px hsl(348 15% 10% / 0.06);
+    --shadow-elegant: 0 12px 40px -8px hsl(348 55% 18% / 0.25);
+    --shadow-gold-glow: 0 0 60px hsl(16 78% 56% / 0.15);
+    --shadow-nav: 0 1px 20px hsl(348 15% 10% / 0.06);
+
+    /* === 过渡动画 === */
+    --transition-smooth: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-slow: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* === 字体 === */
+    --font-serif: 'Noto Serif SC', 'Georgia', serif;
+    --font-sans: 'Noto Sans SC', 'Helvetica Neue', sans-serif;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-serif);
+  }
+
+  .text-gradient {
+    background: var(--gradient-gold);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .divider-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(16 78% 56% / 0.5), transparent);
+  }
+
+  .ornament::after {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 2px;
+    background: var(--gradient-gold);
+    margin-top: 16px;
+  }
+
+  .ornament-center::after {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .img-overlay {
+    position: relative;
+    overflow: hidden;
+  }
+  .img-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, hsl(348 55% 8% / 0.7));
+    pointer-events: none;
+    transition: var(--transition-smooth);
+  }
+  .img-overlay:hover::after {
+    background: linear-gradient(180deg, transparent 20%, hsl(348 55% 8% / 0.85));
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 自定义滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(var(--secondary));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary) / 0.3);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.5);
+}
+
+/* 管理后台侧边栏 */
+.admin-sidebar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--accent) / 0.2) transparent;
+}
