@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { cn } from '@/lib/utils'
 import { useGallery } from '@/hooks/use-gallery'
 import { useCategories } from '@/hooks/use-categories'
@@ -18,7 +18,6 @@ export function Gallery() {
   const { categories } = useCategories()
   const [activeCategory, setActiveCategory] = useState('全部')
   const [visibleItems, setVisibleItems] = useState<Set<string>>(new Set())
-  const observerRef = useRef<IntersectionObserver | null>(null)
 
   const displayItems = items.length > 0
     ? items.map(item => ({
@@ -39,36 +38,16 @@ export function Gallery() {
     ? displayItems
     : displayItems.filter(item => item.category_name === activeCategory)
 
-  // 切换分类时重置可见状态
+  // 切换分类时用延迟动画逐个显示
   useEffect(() => {
     setVisibleItems(new Set())
-  }, [activeCategory])
-
-  // 初始化 observer
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const id = entry.target.getAttribute('data-id')
-          if (id && entry.isIntersecting) {
-            setVisibleItems(prev => new Set(prev).add(id))
-          }
-        })
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    const timers = filteredItems.map((item, index) =>
+      setTimeout(() => {
+        setVisibleItems(prev => new Set(prev).add(item.id))
+      }, 80 * index)
     )
-    return () => {
-      observerRef.current?.disconnect()
-      observerRef.current = null
-    }
-  }, [])
-
-  // 元素挂载时的 ref 回调，立即开始观察
-  const observeItem = useCallback((el: HTMLDivElement | null) => {
-    if (el && observerRef.current) {
-      observerRef.current.observe(el)
-    }
-  }, [])
+    return () => timers.forEach(clearTimeout)
+  }, [filteredItems])
 
   return (
     <section id="gallery" className="py-20 md:py-28">
@@ -114,7 +93,6 @@ export function Gallery() {
             {filteredItems.map((item, index) => (
               <div
                 key={item.id}
-                ref={observeItem}
                 data-id={item.id}
                 className={cn(
                   'group cursor-pointer transition-all duration-700',
