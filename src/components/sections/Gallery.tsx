@@ -38,7 +38,10 @@ export function Gallery() {
     ? displayItems
     : displayItems.filter(item => item.category_name === activeCategory)
 
-  // 切换分类时用延迟动画逐个显示
+  // 用稳定的 key 代替 filteredItems 作为依赖，避免每次渲染都触发
+  const filteredKey = filteredItems.map(i => i.id).join(',')
+
+  // 切换分类或内容变化时用延迟动画逐个显示
   useEffect(() => {
     setVisibleItems(new Set())
     const timers = filteredItems.map((item, index) =>
@@ -47,7 +50,7 @@ export function Gallery() {
       }, 80 * index)
     )
     return () => timers.forEach(clearTimeout)
-  }, [filteredItems])
+  }, [filteredKey])
 
   return (
     <section id="gallery" className="py-20 md:py-28">
